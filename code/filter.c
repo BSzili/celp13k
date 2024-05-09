@@ -308,6 +308,17 @@ void do_pole_filter_1_tap_interp(
 
   float  *tmpbuf;
   int    i,j;
+#ifdef __AMIGA__
+  float  sbuf[256];
+  int    dontfree;
+
+  dontfree = 0;
+  if (numsamples+filter->max_order <= sizeof(sbuf) / sizeof(float)) {
+    tmpbuf = sbuf;
+    dontfree = 1;
+  }
+  else
+#endif
 
   if( (tmpbuf=(float *)(calloc((unsigned)numsamples+filter->max_order, sizeof(float)))) == NULL )
   {
@@ -360,6 +371,9 @@ void do_pole_filter_1_tap_interp(
       filter->memory[i]=tmpbuf[filter->max_order+numsamples-i-1];
     }
   }
+#ifdef __AMIGA__
+  if (!dontfree)
+#endif
   free((char*)tmpbuf);
 }/* end of void do_pole_filter_1_tap_interp() */
 
@@ -374,7 +388,17 @@ void do_zero_filter(
 
   float  *tmpbuf;
   int    i,j;
+#ifdef __AMIGA__
+  float  sbuf[64];
+  int    dontfree;
 
+  dontfree = 0;
+  if (numsamples+filter->order <= sizeof(sbuf) / sizeof(float)) {
+    tmpbuf = sbuf;
+    dontfree = 1;
+  }
+  else
+#endif
   
   if( (tmpbuf=(float *)(calloc((unsigned)numsamples+filter->order, sizeof(float)))) == NULL )
   {
@@ -409,6 +433,9 @@ void do_zero_filter(
       filter->memory[i]=tmpbuf[filter->order+numsamples-i-1];
     }
   }
+#ifdef __AMIGA__
+  if (!dontfree)
+#endif
   free((char*)tmpbuf);
 }
 

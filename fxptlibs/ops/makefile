@@ -6,7 +6,8 @@
 # --------------------------------------------------------------------------- #
 CCTARGET=libops.a
 CC=gcc
-CCFLAGS=-O2 -ansi -Wall
+CCFLAGS=-O2 -Wall
+# -ansi
 CCINCDIR=-I.
 CCLIBDIR=-L.
 CCOBJS=\
@@ -18,8 +19,8 @@ CCINCS=\
 	${CC} ${CCFLAGS} ${CCINCDIR} -c $*.c
 
 ${CCTARGET}: ${CCOBJS}
-	ar rv ${CCTARGET} ${CCOBJS}
-	ranlib ${CCTARGET}
+	${AR} rvs ${CCTARGET} ${CCOBJS}
+#	${RANLIB} ${CCTARGET}
 #	rm -f *.o
 
 ${CCOBJS}: ${CCINCS}

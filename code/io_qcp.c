@@ -107,7 +107,12 @@ void open_qcp_input_file(
     /* Read chunks until we find data */
     while (read_qcp_ensure(8))
     {
+#ifdef __AMIGA__
+      unsigned char *ptr = (unsigned char*)(qcp_buffer + qcp_cursor + 4);
+      int32_t chunk_len = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
+#else
       int32_t chunk_len = *((int32_t*)(qcp_buffer + qcp_cursor + 4));
+#endif
       char* chunk_tag = qcp_buffer + qcp_cursor;
       qcp_cursor += 8;
       if (memcmp(chunk_tag, "fmt ", 4) == 0)
@@ -163,7 +168,12 @@ void open_qcp_input_file(
         qcp_have_vrat = 1;
 
         int32_t vrat_flag = *((int32_t*)(qcp_buffer + qcp_cursor));
+#ifdef __AMIGA__
+        unsigned char *ptr = (unsigned char*)(qcp_buffer + qcp_cursor + 4);
+        qcp_packet_count = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
+#else
         qcp_packet_count = *((int32_t*)(qcp_buffer + qcp_cursor + 4));
+#endif
 
         if (vrat_flag == 0)
         {

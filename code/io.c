@@ -161,16 +161,33 @@ int write_samples(
     int   i;
     short swap;
     float ftmp;
+#ifdef __AMIGA__
+    short tmpbuf[FSIZE];
+#else
     short *tmpbuf;
 
     tmpbuf= (short *)(calloc((unsigned)outsamples, sizeof(short)));
+#endif
 
     for(i=0; i<outsamples; i++ ){
+#ifdef __AMIGA__
+        num = *(outbuf+i);
+        num <<= 2;
+        if (num < -32768) num = -32768;
+        if (num >  32767) num =  32767;
+        swap = num;
+        tmpbuf[i] = ((unsigned short)swap & 0x00ff) << 8 | ((unsigned short)swap & 0xff00) >> 8;
+#else
 	ftmp=*(outbuf+i) *4.0;
 	ftmp=(ftmp<-32768.0)? -32768.0:ftmp;
 	ftmp=(ftmp> 32767.0)?  32767.0:ftmp;
 	swap=(short)ftmp;
+#ifdef __AMIGA__
+	tmpbuf[i] = ((unsigned short)swap & 0x00ff) << 8 | ((unsigned short)swap & 0xff00) >> 8;
+#else
 	tmpbuf[i] = swap;
+#endif
+#endif
     }
     if( (num=fwrite(tmpbuf, sizeof(short),outsamples,fout))
         != outsamples )
@@ -179,7 +196,9 @@ int write_samples(
 	exit(-1);
     }
 
+#ifndef __AMIGA__
     free((char*)tmpbuf);
+#endif
 
     return(num);
 

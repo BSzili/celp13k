@@ -79,6 +79,11 @@ such commitments.
 char *prog;
 char prog_desc[] = "\n\nCELP 13K coder - 03 Mar 2004 plus QCP support\nhttps://github.com/RupW/celp13k";
 char *rates_str[NUMMODES] = {"BLANK", "EIGHTH", "QUARTER", "HALF", "FULL"};
+#ifdef __AMIGA__
+extern void __stkinit(void);
+void * __x = __stkinit;
+unsigned long __stack = 0x8000;
+#endif
 
 extern char     *trans_fname;
 extern int      fer_sim_seed;

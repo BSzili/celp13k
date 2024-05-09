@@ -27,8 +27,8 @@ CCINCS=
 	${CC} ${CCFLAGS} ${CCINCDIR} -c $*.c
 
 ${CCTARGET}: ${CCOBJS}
-	ar rv ${CCTARGET} ${CCOBJS}
-	ranlib ${CCTARGET}
+	${AR} rvs ${CCTARGET} ${CCOBJS}
+#	${RANLIB} ${CCTARGET}
 #	rm -f *.o
 
 ${CCOBJS}: ${CCINCS}
